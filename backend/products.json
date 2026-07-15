@@ -1,0 +1,23 @@
+[
+  {
+    "id": "P001",
+    "name": "Basmati Rice",
+    "category": "Rice & Grains",
+    "price": 32,
+    "unit": "5 kg"
+  },
+  {
+    "id": "P004",
+    "name": "Chicken Whole",
+    "category": "Fresh Meat",
+    "price": 22,
+    "unit": "1 kg"
+  },
+  {
+    "id": "P013",
+    "name": "Biryani Masala",
+    "category": "Spices",
+    "price": 6,
+    "unit": "100 g"
+  }
+]

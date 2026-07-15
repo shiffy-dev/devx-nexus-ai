@@ -1,0 +1,14 @@
+# Environment secrets
+backend/.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+backend/venv/
+venv/
+.venv/
+
+# IDE
+.vscode/
