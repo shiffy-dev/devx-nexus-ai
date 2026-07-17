@@ -4,6 +4,9 @@ from dotenv import load_dotenv
 from groq import Groq
 import os
 import json
+from navigation.routing import create_route
+from navigation.sessions import navigation_sessions
+from navigation.product_locations import product_locations
 
 from services.intent import classify_intent
 
@@ -54,6 +57,14 @@ class ChatRequest(BaseModel):
     message: str
     session_id: str
 
+class RouteRequest(BaseModel):
+    session_id: str
+    from_node_id: str
+    product_ids: list[str]
+
+
+class ScanRequest(BaseModel):
+    node_id: str
 
 
 @app.get("/")
@@ -310,4 +321,96 @@ def test_key():
 
         "key_loaded": key is not None
 
+    }
+
+class RouteRequest(BaseModel):
+    session_id: str
+    from_node_id: str
+    product_ids: list[str]
+
+@app.post("/api/navigation/route")
+def navigation_route(request: RouteRequest):
+
+    route = create_route(
+        request.from_node_id,
+        request.product_ids
+    )
+
+    product_details = []
+
+    for product_id in request.product_ids:
+
+      for product in products:
+
+        if product["id"] == product_id:
+
+            product_details.append({
+                "id": product["id"],
+                "name": product["name"],
+                "node": product_locations[product_id]
+            })
+
+    steps = []
+
+    for i, node in enumerate(route):
+
+        if i == 0:
+            steps.append(
+                f"Start at {node}"
+            )
+        else:
+            steps.append(
+                f"Proceed to store node {node}"
+)
+
+
+    return {
+        "session_id": request.session_id,
+        "route": route,
+        "products": product_details,
+        "steps": steps,
+        "estimated_time_minutes": len(route)
+    }
+
+@app.patch("/api/navigation/session/{session_id}/scan")
+def scan_qr(session_id: str, request: ScanRequest):
+
+    navigation_sessions[session_id] = {
+        "current_node": request.node_id
+    }
+
+
+    remaining_route = create_route(
+        request.node_id,
+        [
+            "P001",
+            "P004",
+            "P013"
+        ]
+    )
+
+
+    return {
+        "session_id": session_id,
+        "current_node": request.node_id,
+        "remaining_route": remaining_route,
+        "message": "Location updated successfully"
+    }
+
+@app.get("/api/navigation/session/{session_id}/step")
+def navigation_step(session_id: str):
+
+    session = navigation_sessions.get(session_id)
+
+
+    if not session:
+        return {
+            "error": "Session not found"
+        }
+
+
+    return {
+        "session_id": session_id,
+        "current_node": session["current_node"],
+        "instruction": f"Continue from {session['current_node']}"
     }

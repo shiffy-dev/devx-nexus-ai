@@ -4,20 +4,170 @@
     "name": "Basmati Rice",
     "category": "Rice & Grains",
     "price": 32,
-    "unit": "5 kg"
+    "unit": "5 kg",
+    "location": "Aisle 7, Rack 3, Shelf 6",
+    "node": "N-006"
+  },
+  {
+    "id": "P002",
+    "name": "Sella Rice",
+    "category": "Rice & Grains",
+    "price": 28,
+    "unit": "5 kg",
+    "location": "Aisle 7, Rack 3, Shelf 5",
+    "node": "N-006"
+  },
+  {
+    "id": "P003",
+    "name": "Brown Rice",
+    "category": "Rice & Grains",
+    "price": 18,
+    "unit": "2 kg",
+    "location": "Aisle 7, Rack 4, Shelf 2",
+    "node": "N-006"
   },
   {
     "id": "P004",
     "name": "Chicken Whole",
     "category": "Fresh Meat",
     "price": 22,
-    "unit": "1 kg"
+    "unit": "1 kg",
+    "location": "Fresh Meat Counter, Bay 2",
+    "node": "N-010"
+  },
+  {
+    "id": "P005",
+    "name": "Chicken Breast",
+    "category": "Fresh Meat",
+    "price": 16,
+    "unit": "500 g",
+    "location": "Fresh Meat Counter, Bay 2",
+    "node": "N-010"
+  },
+  {
+    "id": "P006",
+    "name": "Lamb Shoulder",
+    "category": "Fresh Meat",
+    "price": 55,
+    "unit": "1 kg",
+    "location": "Fresh Meat Counter, Bay 1",
+    "node": "N-010"
+  },
+  {
+    "id": "P007",
+    "name": "Minced Beef",
+    "category": "Fresh Meat",
+    "price": 24,
+    "unit": "500 g",
+    "location": "Fresh Meat Counter, Bay 3",
+    "node": "N-010"
+  },
+  {
+    "id": "P008",
+    "name": "Fresh Yogurt",
+    "category": "Dairy & Chilled",
+    "price": 8,
+    "unit": "500 g",
+    "location": "Aisle 2, Rack 1, Shelf 4",
+    "node": "N-012"
+  },
+  {
+    "id": "P009",
+    "name": "Full Cream Milk",
+    "category": "Dairy & Chilled",
+    "price": 6,
+    "unit": "1L",
+    "location": "Aisle 2, Rack 2, Shelf 3",
+    "node": "N-012"
+  },
+  {
+    "id": "P010",
+    "name": "Eggs",
+    "category": "Dairy & Chilled",
+    "price": 14,
+    "unit": "30 pcs",
+    "location": "Aisle 2, Rack 5, Shelf 1",
+    "node": "N-012"
+  },
+  {
+    "id": "P011",
+    "name": "Onions",
+    "category": "Fresh Produce",
+    "price": 4,
+    "unit": "1 kg",
+    "location": "Aisle 1, Rack 2, Shelf 1",
+    "node": "N-011"
+  },
+  {
+    "id": "P012",
+    "name": "Tomatoes",
+    "category": "Fresh Produce",
+    "price": 5,
+    "unit": "1 kg",
+    "location": "Aisle 1, Rack 1, Shelf 2",
+    "node": "N-011"
   },
   {
     "id": "P013",
     "name": "Biryani Masala",
     "category": "Spices",
     "price": 6,
-    "unit": "100 g"
+    "unit": "100 g",
+    "location": "Aisle 5, Rack 4, Shelf 3",
+    "node": "N-004"
+  },
+  {
+    "id": "P014",
+    "name": "Turmeric Powder",
+    "category": "Spices",
+    "price": 5,
+    "unit": "100 g",
+    "location": "Aisle 5, Rack 2, Shelf 2",
+    "node": "N-004"
+  },
+  {
+    "id": "P015",
+    "name": "Pepsi Cola",
+    "category": "Beverages",
+    "price": 6,
+    "unit": "1.5 L",
+    "location": "Aisle 8, Rack 1, Shelf 3",
+    "node": "N-007"
+  },
+  {
+    "id": "P016",
+    "name": "Mineral Water",
+    "category": "Beverages",
+    "price": 8,
+    "unit": "12 x 500 ml",
+    "location": "Aisle 8, Rack 3, Shelf 1",
+    "node": "N-007"
+  },
+  {
+    "id": "P017",
+    "name": "Arabic Bread",
+    "category": "Bakery",
+    "price": 3,
+    "unit": "6 pcs",
+    "location": "Bakery Counter, Bay 1",
+    "node": "N-013"
+  },
+  {
+    "id": "P018",
+    "name": "Lay's Chips",
+    "category": "Snacks",
+    "price": 7,
+    "unit": "165 g",
+    "location": "Aisle 6, Rack 1, Shelf 2",
+    "node": "N-005"
+  },
+  {
+    "id": "P019",
+    "name": "Sunflower Oil",
+    "category": "Cooking Oil",
+    "price": 16,
+    "unit": "1.8 L",
+    "location": "Aisle 9, Rack 1, Shelf 2",
+    "node": "N-008"
   }
 ]
