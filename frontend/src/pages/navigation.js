@@ -30,7 +30,7 @@ export default function Navigation({ cartItems, onBackToCart, onCompleteNavigati
 
       if (!response.ok) throw new Error("Could not fetch route");
       const data = await response.json();
-      setRoute(data.route);
+      setRoute(data.route || []);
       setNavSession(data.session_id);
     } catch (err) {
       setError(err.message);
@@ -153,7 +153,13 @@ export default function Navigation({ cartItems, onBackToCart, onCompleteNavigati
               <div key={idx} className={`item-card ${idx === 0 ? "active" : ""}`}>
                 <span className="item-num">{itemsCollected + idx + 1}</span>
                 <div>
-                  <p className="item-name">{step.location}</p>
+                  <p className="item-name">
+🛒 {step.product}
+</p>
+
+<p className="item-location">
+📍 {step.location}
+</p>
                   <p className="item-distance">~{step.distance}m away</p>
                 </div>
               </div>

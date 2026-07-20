@@ -104,7 +104,7 @@ export default function Cart({ onBackToChat, onCheckout, onNavigate }) {
 
           <button 
             className="navigation-btn" 
-            onClick={onNavigate}
+            onClick={() => onNavigate(cartItems)}
           >
             🗺️ Find My Route in Store
           </button>
