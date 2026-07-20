@@ -118,5 +118,11 @@ def create_route(start_node, product_ids):
 
         current = node
 
+    checkout_path = shortest_path(
+        current,
+        "N-009"
+    )
+
+    route.extend(checkout_path[1:])
 
     return route

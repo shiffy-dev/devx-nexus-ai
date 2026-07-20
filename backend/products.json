@@ -169,5 +169,15 @@
     "unit": "1.8 L",
     "location": "Aisle 9, Rack 1, Shelf 2",
     "node": "N-008"
+  },
+
+  {
+    "id": "P020",
+    "name": "Ariel Detergent",
+    "category": "Household",
+    "price": 28,
+    "unit": "2 kg",
+    "location": "Aisle 10, Rack 2, Shelf 4",
+    "node": "N-008"
   }
 ]
