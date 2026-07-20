@@ -2,7 +2,8 @@ import React, { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import "../styles/Checkout.css";
 
-export default function Checkout({ onBackToCart, onOrderPlaced }) {
+
+export default function Checkout({ onBackToCart, onOrderPlaced, onAdmin }) {
   const { cartItems, getTotalPrice, clearCart } = useContext(CartContext);
   const [formData, setFormData] = useState({
     fullName: "",
@@ -134,23 +135,30 @@ export default function Checkout({ onBackToCart, onOrderPlaced }) {
                   value={formData.paymentMethod}
                   onChange={handleChange}
                 >
-                  <option value="cash">💵 Cash on Delivery</option>
-                  <option value="card">💳 Credit/Debit Card</option>
-                  <option value="wallet">📱 Digital Wallet</option>
+                  <option value="cash"> Cash on Delivery</option>
+                  <option value="card"> Credit/Debit Card</option>
+                  <option value="wallet">Digital Wallet</option>
                 </select>
               </div>
             </div>
           </div>
 
-          {error && <div className="error-message">❌ {error}</div>}
+          {error && <div className="error-message">! {error}</div>}
 
           <button
             type="submit"
             disabled={!isFormValid || loading}
             className="place-order-btn"
           >
-            {loading ? "⏳ Placing Order..." : `✓ Place Order (AED ${(getTotalPrice() + 5).toFixed(2)})`}
+            {loading ? "Placing Order..." : `✓ Place Order (AED ${(getTotalPrice() + 5).toFixed(2)})`}
           </button>
+          <button
+  type="button"
+  className="admin-button"
+  onClick={onAdmin}
+>
+  Open Admin Dashboard
+</button>
         </form>
 
         <div className="order-summary">

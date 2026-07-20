@@ -1,0 +1,539 @@
+/* ============================
+   DEVX NEXUS NAVIGATION UI
+============================ */
+
+
+.nav-container {
+
+    min-height:100vh;
+    background:
+    radial-gradient(circle at top,#182848,#050505);
+
+    color:white;
+    font-family:
+    "Inter",
+    sans-serif;
+
+    padding:30px;
+
+}
+
+
+
+/* HEADER */
+
+.nav-header {
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    background:
+    rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(15px);
+
+    padding:20px 30px;
+
+    border-radius:24px;
+
+    border:
+    1px solid rgba(255,255,255,0.15);
+
+    margin-bottom:30px;
+
+}
+
+
+.nav-header h1 {
+
+    font-size:32px;
+
+    background:
+    linear-gradient(
+        90deg,
+        #00f5ff,
+        #8b5cf6
+    );
+
+    -webkit-background-clip:text;
+
+    color:transparent;
+
+}
+
+
+
+.back-btn {
+
+
+    background:
+    rgba(255,255,255,0.1);
+
+    color:white;
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+}
+
+
+.back-btn:hover {
+
+    background:
+    rgba(255,255,255,0.2);
+
+}
+
+
+
+.nav-progress {
+
+
+    background:
+    linear-gradient(
+        135deg,
+        #00f5ff,
+        #8b5cf6
+    );
+
+    padding:10px 20px;
+
+    border-radius:30px;
+
+    font-weight:bold;
+
+}
+
+
+
+/* MAIN GRID */
+
+
+.nav-content {
+
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 350px;
+
+    gap:30px;
+
+}
+
+
+
+/* MAIN CARD */
+
+
+.nav-main {
+
+
+    background:
+    rgba(255,255,255,0.06);
+
+    border-radius:30px;
+
+    padding:30px;
+
+    border:
+    1px solid rgba(255,255,255,.1);
+
+    backdrop-filter:
+    blur(20px);
+
+}
+
+
+
+/* STEP CARD */
+
+
+.instruction-card {
+
+
+    background:
+    linear-gradient(
+        135deg,
+        rgba(0,245,255,.15),
+        rgba(139,92,246,.15)
+    );
+
+
+    padding:35px;
+
+    border-radius:25px;
+
+    border:
+    1px solid rgba(255,255,255,.2);
+
+}
+
+
+
+.instruction-number {
+
+
+    color:#00f5ff;
+
+    font-weight:bold;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+}
+
+
+.instruction-text {
+
+
+    font-size:36px;
+
+    margin:
+    20px 0;
+
+
+}
+
+
+
+.instruction-details {
+
+
+    display:flex;
+
+    gap:20px;
+
+}
+
+
+.instruction-details p {
+
+
+    background:
+    rgba(0,0,0,.3);
+
+    padding:12px 18px;
+
+    border-radius:15px;
+
+}
+
+
+
+/* QR */
+
+
+.qr-section {
+
+
+    margin-top:30px;
+
+    background:
+    rgba(0,0,0,.25);
+
+    padding:25px;
+
+    border-radius:25px;
+
+}
+
+
+
+.node-selector {
+
+
+    margin-top:20px;
+
+}
+
+
+
+.node-dropdown {
+
+
+    width:100%;
+
+    padding:18px;
+
+    border-radius:16px;
+
+    background:#111;
+
+    color:white;
+
+    border:
+    1px solid #444;
+
+    font-size:16px;
+
+}
+
+
+
+/* SIDEBAR */
+
+
+.nav-sidebar {
+
+
+    background:
+    rgba(255,255,255,.06);
+
+    border-radius:30px;
+
+    padding:25px;
+
+    height:fit-content;
+
+    border:
+    1px solid rgba(255,255,255,.15);
+
+}
+
+
+
+.nav-sidebar h3 {
+
+
+    font-size:22px;
+
+}
+
+
+
+.item-card {
+
+
+    display:flex;
+
+    gap:15px;
+
+    padding:18px;
+
+    margin:
+    12px 0;
+
+
+    border-radius:18px;
+
+    background:
+    rgba(255,255,255,.08);
+
+    transition:.3s;
+
+}
+
+
+
+.item-card.active {
+
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #00f5ff,
+        #8b5cf6
+    );
+
+    color:black;
+
+    transform:scale(1.05);
+
+}
+
+
+
+.item-num {
+
+
+    width:35px;
+
+    height:35px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:white;
+
+    color:black;
+
+    font-weight:bold;
+
+}
+
+
+
+/* STATS */
+
+
+.nav-stats {
+
+
+    margin-top:30px;
+
+}
+
+
+.stat {
+
+
+    display:flex;
+
+    justify-content:space-between;
+
+    background:
+    rgba(0,0,0,.3);
+
+    padding:18px;
+
+    border-radius:15px;
+
+    margin-top:10px;
+
+}
+
+
+.stat-value {
+
+
+    color:#00f5ff;
+
+    font-weight:bold;
+
+}
+
+
+
+/* COMPLETE */
+
+
+.nav-complete {
+
+
+    text-align:center;
+
+    padding:60px;
+
+}
+
+
+.success-icon {
+
+
+    font-size:80px;
+
+}
+
+
+
+.checkout-btn {
+
+
+    margin-top:20px;
+
+    padding:15px 30px;
+
+    border:none;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(
+    135deg,
+    #00f5ff,
+    #8b5cf6
+    );
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+
+/* LOADING */
+
+
+.nav-loading {
+
+
+    height:100vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+.spinner {
+
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:50%;
+
+    border:
+    5px solid rgba(255,255,255,.2);
+
+    border-top-color:#00f5ff;
+
+    animation:
+    spin 1s linear infinite;
+
+}
+
+
+@keyframes spin {
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+
+/* MOBILE */
+
+
+@media(max-width:900px){
+
+
+.nav-content{
+
+    grid-template-columns:1fr;
+
+}
+
+
+.instruction-text{
+
+    font-size:25px;
+
+}
+
+}
