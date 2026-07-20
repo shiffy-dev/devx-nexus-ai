@@ -1,14 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from groq import Groq
+
+
 import os
 import json
+
 from navigation.routing import create_route
 from navigation.sessions import navigation_sessions
 from navigation.product_locations import product_locations
 
 from services.intent import classify_intent
+
 
 from services.memory import (
     get_history,
@@ -21,7 +26,101 @@ from services.RAG import (
 )
 
 
+# ==========================
+# APP SETUP
+# ==========================
+
 app = FastAPI()
+
+class AdminLoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+
+@app.post("/api/admin/login")
+def admin_login(request: AdminLoginRequest):
+
+    if (
+        request.username == "admin"
+        and request.password == "madina123"
+    ):
+
+        return {
+            "success": True,
+            "message": "Login successful"
+        }
+
+
+    return {
+        "success": False,
+        "message": "Invalid credentials"
+    }
+
+
+
+
+# ADMIN WEBSOCKET
+admin_connections = []
+
+
+@app.websocket("/ws/admin")
+async def admin_websocket(websocket: WebSocket):
+
+    await websocket.accept()
+
+    admin_connections.append(websocket)
+
+    print("✅ Admin connected")
+
+
+    try:
+
+        while True:
+
+            await websocket.receive_text()
+
+
+    except WebSocketDisconnect:
+
+        admin_connections.remove(websocket)
+
+        print("❌ Admin disconnected")
+
+
+
+async def notify_admins(order):
+
+    for connection in admin_connections:
+
+        await connection.send_json({
+
+            "type": "NEW_ORDER",
+
+            "order": order
+
+        })
+      
+
+
+# ==========================
+# CORS
+# ==========================
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# ==========================
+# ENV + GROQ
+# ==========================
 
 load_dotenv()
 
@@ -31,12 +130,21 @@ client = Groq(
 )
 
 
+# ==========================
+# PRODUCTS
+# ==========================
+
 with open("products.json", "r") as file:
     products = json.load(file)
 
 
 create_product_embeddings(products)
 
+
+
+# ==========================
+# HELPERS
+# ==========================
 
 def detect_language(text):
 
@@ -53,9 +161,16 @@ def detect_language(text):
 
 
 
+# ==========================
+# MODELS
+# ==========================
+
 class ChatRequest(BaseModel):
     message: str
     session_id: str
+    branch_id: str = "madina-dubai"
+
+
 
 class RouteRequest(BaseModel):
     session_id: str
@@ -63,9 +178,15 @@ class RouteRequest(BaseModel):
     product_ids: list[str]
 
 
+
 class ScanRequest(BaseModel):
     node_id: str
 
+
+
+# ==========================
+# HOME
+# ==========================
 
 @app.get("/")
 def home():
@@ -76,31 +197,32 @@ def home():
 
 
 
+# ==========================
+# AI CHAT
+# ==========================
+
 @app.post("/api/ai/chat")
 def chat(request: ChatRequest):
 
     try:
 
-        # Detect user language
         language = detect_language(
             request.message
         )
 
 
-        # Load previous conversation
         history = get_history(
             request.session_id
         )
+        print("BRANCH:", request.branch_id)
 
 
-        # Intent classification
         intent = classify_intent(
             client,
             request.message
         )
 
 
-        # Semantic search
         matched_products = semantic_search(
             request.message,
             products
@@ -151,64 +273,20 @@ Only recommend products from this catalog:
 STRICT RULES:
 
 - Only recommend products from the provided catalog.
-- Product reasons must be based only on catalog information.
 - Never invent products.
-- Never describe products incorrectly.
-
-Examples:
-- Basmati Rice is rice, not wheat.
-- Chicken Whole is chicken.
-- Biryani Masala is a spice product.
-
-
-LANGUAGE RULES:
-
-If required language is English:
-- All JSON text fields must be English.
-- Do not use Arabic.
-- Do not use Chinese.
-- Do not mix languages.
-
-If required language is Arabic:
-- All JSON text fields must be Arabic.
-
-Ignore language from:
-- previous conversation history
-- product catalog
-- intent metadata
-
+- Keep product IDs exactly as provided.
 
 QUANTITY RULES:
 
 - Prices are in AED.
-- Quantity means number of purchasable units/packages, not weight.
-- Never ask the user for kilograms. Ask for number of packs/units if needed.
+- Quantity means number of units/packages.
 - Always use whole numbers.
-- Never return weight as quantity.
 - Never include units inside qty.
-- For recipe requests, estimate the minimum number of product packages required.
-- Never increase quantity based on serving size unless the catalog package size requires it.
 
-Bad:
-
-"qty": "1 bag"
-
-
-Good:
-
-"qty": 1
-
-
-
-Keep product IDs exactly as provided.
 
 Return ONLY valid JSON.
 
-No markdown.
-
-
 Format:
-
 
 {{
   "message": "short helpful response",
@@ -229,7 +307,6 @@ Format:
                 },
 
 
-                # Previous memory
                 *history,
 
 
@@ -248,8 +325,6 @@ Format:
         ai_reply = response.choices[0].message.content
 
 
-
-        # Save conversation
 
         add_message(
             request.session_id,
@@ -282,6 +357,7 @@ Format:
             }
 
 
+
         except json.JSONDecodeError:
 
 
@@ -311,6 +387,11 @@ Format:
 
 
 
+
+# ==========================
+# TEST KEY
+# ==========================
+
 @app.get("/test-key")
 def test_key():
 
@@ -323,10 +404,27 @@ def test_key():
 
     }
 
-class RouteRequest(BaseModel):
-    session_id: str
-    from_node_id: str
-    product_ids: list[str]
+
+# ==========================
+# PRODUCT DETAILS
+# ==========================
+
+@app.get("/api/products/{product_id}")
+def get_product(product_id: str):
+
+    for product in products:
+
+        if product["id"] == product_id:
+
+            return product
+
+
+    return {
+        "error": "Product not found"
+    }
+# ==========================
+# NAVIGATION ROUTE
+# ==========================
 
 @app.post("/api/navigation/route")
 def navigation_route(request: RouteRequest):
@@ -336,81 +434,235 @@ def navigation_route(request: RouteRequest):
         request.product_ids
     )
 
+
     product_details = []
+
 
     for product_id in request.product_ids:
 
-      for product in products:
+        for product in products:
 
-        if product["id"] == product_id:
+            if product["id"] == product_id:
 
-            product_details.append({
-                "id": product["id"],
-                "name": product["name"],
-                "node": product_locations[product_id]
-            })
+                product_details.append({
 
-    steps = []
+    "id": product["id"],
 
-    for i, node in enumerate(route):
+    "name": product["name"],
 
-        if i == 0:
-            steps.append(
-                f"Start at {node}"
-            )
-        else:
-            steps.append(
-                f"Proceed to store node {node}"
-)
+    "node": product.get(
+        "node",
+        "Unknown"
+    ),
 
-
-    return {
-        "session_id": request.session_id,
-        "route": route,
-        "products": product_details,
-        "steps": steps,
-        "estimated_time_minutes": len(route)
-    }
-
-@app.patch("/api/navigation/session/{session_id}/scan")
-def scan_qr(session_id: str, request: ScanRequest):
-
-    navigation_sessions[session_id] = {
-        "current_node": request.node_id
-    }
-
-
-    remaining_route = create_route(
-        request.node_id,
-        [
-            "P001",
-            "P004",
-            "P013"
-        ]
+    "location": product.get(
+        "location",
+        "Unknown"
     )
 
+})
+
+
+    navigation_steps = []
+
+
+    for node in route:
+
+        matched_product = None
+
+
+        for product in product_details:
+
+            if product["node"] == node:
+
+                matched_product = product
+
+
+
+        navigation_steps.append({
+
+    "node_id": node,
+
+    "location":
+        matched_product["location"]
+        if matched_product
+        else f"Store Node {node}",
+
+
+    "instruction":
+        f"Pick up {matched_product['name']}"
+        if matched_product
+        else f"Continue towards {node}",
+
+
+    "distance": 10,
+
+
+    "product":
+        matched_product["name"]
+        if matched_product
+        else "Checkpoint"
+
+})
+
+
+
+    navigation_sessions[request.session_id] = {
+
+        "route": navigation_steps,
+
+        "products": request.product_ids,
+
+        "current_node": request.from_node_id
+
+    }
+
+
 
     return {
-        "session_id": session_id,
-        "current_node": request.node_id,
-        "remaining_route": remaining_route,
-        "message": "Location updated successfully"
+
+        "session_id": request.session_id,
+
+        "route": navigation_steps,
+
+        "products": product_details,
+
+        "estimated_time_minutes": len(route)
+
     }
+
+# ==========================
+# QR SCAN
+# ==========================
+
+@app.patch("/api/navigation/session/{session_id}/scan")
+def scan_qr(
+    session_id: str,
+    request: ScanRequest
+):
+
+    session = navigation_sessions.get(session_id)
+
+    if not session:
+        return {
+            "error":"Session not found"
+        }
+
+
+    session["current_node"] = request.node_id
+
+
+    return {
+
+        "session_id": session_id,
+
+        "current_node": request.node_id,
+
+        "instruction":
+        "Arrived at {request.node_id}",
+
+        "message":
+        "Location updated successfully"
+
+    }
+
+# ==========================
+# NAVIGATION STEP
+# ==========================
 
 @app.get("/api/navigation/session/{session_id}/step")
 def navigation_step(session_id: str):
 
-    session = navigation_sessions.get(session_id)
+    session = navigation_sessions.get(
+        session_id
+    )
 
 
     if not session:
+
         return {
+
             "error": "Session not found"
+
         }
 
 
+
     return {
+
         "session_id": session_id,
+
         "current_node": session["current_node"],
+
         "instruction": f"Continue from {session['current_node']}"
+
+    }
+
+# ==========================
+# DELETE AI SESSION
+# ==========================
+
+@app.delete("/api/ai/session/{session_id}")
+def delete_ai_session(session_id: str):
+
+    try:
+
+        navigation_sessions.pop(
+            session_id,
+            None
+        )
+
+
+        return {
+            "message":"Session cleared",
+            "session_id":session_id
+        }
+
+
+    except Exception as e:
+
+        return {
+            "error":str(e)
+        }
+    
+# ==========================
+# GET AI SESSION HISTORY
+# ==========================
+
+@app.get("/api/ai/session/{session_id}")
+def get_ai_session(session_id: str):
+
+    history = get_history(session_id)
+
+
+    return {
+
+        "session_id": session_id,
+
+        "messages": history
+
+    }
+
+class OrderRequest(BaseModel):
+    order_id: str
+    customer: str
+    items: list[str]
+    status: str
+
+
+
+@app.post("/api/orders")
+async def create_order(order: OrderRequest):
+
+    await notify_admins(
+        order.dict()
+    )
+
+
+    return {
+
+        "message": "Order sent to admin",
+
+        "order": order
+
     }
