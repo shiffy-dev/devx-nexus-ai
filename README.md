@@ -167,3 +167,8 @@ The system combines a React frontend with a FastAPI backend, using AI-powered pr
 - Graph Routing Engine → Store navigation optimization
 - Product Catalog → Grocery data source
 - Context API → Frontend state management
+
+NOTE - for future development the following can be noted:
+- APIs for live order track, admin dashboard CRUD APIs
+- The project is not 100% perfect, I developed according to time constraint
+- The Frontend and Backend needs more working and additional unique features to make the project perfect and deployable
